@@ -37,9 +37,8 @@ def to_pol_format(st):
     return res
 
 
-def left_rectangles_method(eq, num):
+def left_rectangles_method(eq, accuracy, a, b):
     print("Метод левых прямоугольников")
-    accuracy, a, b = get_data(eq)
     n = 4
     h = (b - a) / n
     x_table = [a]
@@ -71,9 +70,8 @@ def left_rectangles_method(eq, num):
     print("Число разбиения интервала", n)
 
 
-def right_rectangles_method(eq, num):
+def right_rectangles_method(eq, accuracy, a, b):
     print("Метод правых прямоугольников")
-    accuracy, a, b = get_data(eq)
     n = 4
     h = (b - a) / n
     x_table = [a+h]
@@ -105,9 +103,8 @@ def right_rectangles_method(eq, num):
     print("Число разбиения интервала", n)
 
 
-def middle_rectangles_method(eq, num):
+def middle_rectangles_method(eq, accuracy, a, b):
     print("Метод средних прямоугольников")
-    accuracy, a, b = get_data(eq)
     n = 4
     h = (b - a) / n
     x_table = [a+h/2]
@@ -139,9 +136,8 @@ def middle_rectangles_method(eq, num):
     print("Число разбиения интервала", n)
 
 
-def trapeze_method(eq, num):
+def trapeze_method(eq, accuracy, a, b):
     print("Метод трапеций")
-    accuracy, a, b = get_data(eq)
     n = 4
     h = (b - a) / n
     x_table = [a]
@@ -173,9 +169,8 @@ def trapeze_method(eq, num):
     print("Число разбиения интервала", n)
 
 
-def simpson_method(eq, num):
+def simpson_method(eq, accuracy, a, b):
     print("Метод трапеций")
-    accuracy, a, b = get_data(eq)
     n = 4
     h = (b - a) / n
     x_table = [a]
@@ -232,16 +227,17 @@ while work:
             print("4. Метод трапеций")
             print("5. Метод Симпсона")
             method = enter_value(1, 5)
+            ac, begin, end = get_data(equation)
             if method == 1:
-                left_rectangles_method(equation, number)
+                left_rectangles_method(equation, ac, begin, end)
             elif method == 2:
-                right_rectangles_method(equation, number)
+                right_rectangles_method(equation, ac, begin, end)
             elif method == 3:
-                middle_rectangles_method(equation, number)
+                middle_rectangles_method(equation, ac, begin, end)
             elif method == 4:
-                trapeze_method(equation, number)
+                trapeze_method(equation, ac, begin, end)
             else:
-                simpson_method(equation, number)
+                simpson_method(equation, ac, begin, end)
         except ValueError:
             print("Ошибка в введенном уравнении")
     else:
