@@ -94,20 +94,3 @@ def derivative(eq):
     return d
 
 
-# Вычисление начального приближения
-def get_initial_approximation(eq, a, b, accur):
-    derA = func(derivative(derivative(eq)), a)
-    derB = func(derivative(derivative(eq)), b)
-    if func(eq, a) * derA > 0:
-        return a, a + accur
-    elif func(eq, b) * derB > 0:
-        return b, b - accur
-    else:
-        if abs(func(eq, a)) <= abs(func(eq, b)):
-            return a, a + accur
-        else:
-            return b, b - accur
-
-
-# def check_convergence(eq, a, b):
-

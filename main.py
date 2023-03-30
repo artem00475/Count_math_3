@@ -1,5 +1,7 @@
-from console_utils import *
+import sympy
 
+from console_utils import *
+from sympy import *
 
 def get_data(eq):
     accuracy = get_accuracy()
@@ -38,7 +40,6 @@ def to_pol_format(st):
 
 
 def left_rectangles_method(eq, accuracy, a, b):
-    print("Метод левых прямоугольников")
     n = 4
     h = (b - a) / n
     x_table = [a]
@@ -66,12 +67,10 @@ def left_rectangles_method(eq, accuracy, a, b):
         if abs(r - result) < accuracy:
             flag = False
         result = r
-    print("Значение интеграла:", result)
-    print("Число разбиения интервала", n)
+    return result, n
 
 
 def right_rectangles_method(eq, accuracy, a, b):
-    print("Метод правых прямоугольников")
     n = 4
     h = (b - a) / n
     x_table = [a+h]
@@ -99,12 +98,10 @@ def right_rectangles_method(eq, accuracy, a, b):
         if abs(r - result) < accuracy:
             flag = False
         result = r
-    print("Значение интеграла:", result)
-    print("Число разбиения интервала", n)
+    return result, n
 
 
 def middle_rectangles_method(eq, accuracy, a, b):
-    print("Метод средних прямоугольников")
     n = 4
     h = (b - a) / n
     x_table = [a+h/2]
@@ -132,12 +129,10 @@ def middle_rectangles_method(eq, accuracy, a, b):
         if abs(r - result)/3 < accuracy:
             flag = False
         result = r
-    print("Значение интеграла:", result)
-    print("Число разбиения интервала", n)
+    return result, n
 
 
 def trapeze_method(eq, accuracy, a, b):
-    print("Метод трапеций")
     n = 4
     h = (b - a) / n
     x_table = [a]
@@ -165,12 +160,10 @@ def trapeze_method(eq, accuracy, a, b):
         if abs(r - result) / 3 < accuracy:
             flag = False
         result = r
-    print("Значение интеграла:", result)
-    print("Число разбиения интервала", n)
+    return result, n
 
 
 def simpson_method(eq, accuracy, a, b):
-    print("Метод трапеций")
     n = 4
     h = (b - a) / n
     x_table = [a]
@@ -198,8 +191,7 @@ def simpson_method(eq, accuracy, a, b):
         if abs(r - result) / 15 < accuracy:
             flag = False
         result = r
-    print("Значение интеграла:", result)
-    print("Число разбиения интервала", n)
+    return result, n
 
 
 work = True
@@ -229,50 +221,99 @@ while work:
             method = enter_value(1, 5)
             ac, begin, end = get_data(equation)
             if method == 1:
-                left_rectangles_method(equation, ac, begin, end)
+                print("Метод левых прямоугольников")
+                r, c = left_rectangles_method(equation, ac, begin, end)
             elif method == 2:
-                right_rectangles_method(equation, ac, begin, end)
+                print("Метод правых прямоугольников")
+                r, c = right_rectangles_method(equation, ac, begin, end)
             elif method == 3:
-                middle_rectangles_method(equation, ac, begin, end)
+                print("Метод средних прямоугольников")
+                r, c = middle_rectangles_method(equation, ac, begin, end)
             elif method == 4:
-                trapeze_method(equation, ac, begin, end)
+                print("Метод трапеций")
+                r, c = trapeze_method(equation, ac, begin, end)
             else:
-                simpson_method(equation, ac, begin, end)
+                print("Метод Симпсона")
+                r, c = simpson_method(equation, ac, begin, end)
+            print("Значение интеграла:", r)
+            print("Число разбиения интервала", c)
         except ValueError:
             print("Ошибка в введенном уравнении")
     else:
         print()
-        # f = open("equations1.txt")
-        # count = int(f.readline())
-        # print("Выбирите подинтегральную функцию:")
-        # equations = []
-        # try:
-        #     for x in range(1, count + 1):
-        #         e = f.readline().replace('\n', '')
-        #         s = str(x) + '. ' + e
-        #         equations.append(to_pol_format(e))
-        #         print(s)
-        #     number = enter_value(1, count)
-        #     equation = equations[number - 1]
-        #     print("Выберите метод:")
-        #     print("1. Метод левых прямоугольников")
-        #     print("2. Метод правых прямоугольников")
-        #     print("3. Метод средних прямоугольников")
-        #     print("4. Метод трапеций")
-        #     print("5. Метод Симпсона")
-        #     method = enter_value(1, 5)
-        #     if method == 1:
-        #         left_rectangles_method(equation, number)
-        #     elif method == 2:
-        #         right_rectangles_method(equation, number)
-        #     elif method == 3:
-        #         middle_rectangles_method(equation, number)
-        #     elif method == 4:
-        #         trapeze_method(equation, number)
-        #     else:
-        #         simpson_method(equation, number)
-        # except ValueError:
-        #     print("Ошибка в введенном уравнении")
+        f = open("equations1.txt")
+        count = int(f.readline())
+        print("Выбирите подинтегральную функцию:")
+        equations = []
+        try:
+            for x in range(1, count + 1):
+                e = f.readline().replace('\n', '')
+                s = str(x) + '. ' + e
+                equations.append(to_pol_format(e))
+                print(s)
+            number = enter_value(1, count)
+            equation = equations[number - 1]
+            print("Выберите метод:")
+            print("1. Метод левых прямоугольников")
+            print("2. Метод правых прямоугольников")
+            print("3. Метод средних прямоугольников")
+            print("4. Метод трапеций")
+            print("5. Метод Симпсона")
+            method = enter_value(1, 5)
+            ac, begin, end = get_data(equation)
+
+            try:
+                if number == 1 and begin <= 0 <= end:
+                    raise ArithmeticError
+                interval, symbols = check_interval(equation, begin, end, ac)
+                r, c = 0, 0
+                # print(interval)
+                if len(interval) == 2:
+                    begin, end = interval[0], interval[1]
+                    if method == 1:
+                        r, c = left_rectangles_method(equation, ac, begin, end)
+                    elif method == 2:
+                        r, c = right_rectangles_method(equation, ac, begin, end)
+                    elif method == 3:
+                        r, c = middle_rectangles_method(equation, ac, begin, end)
+                    elif method == 4:
+                        r, c = trapeze_method(equation, ac, begin, end)
+                    else:
+                        r, c = simpson_method(equation, ac, begin, end)
+                else:
+                    for i in range(1, len(interval)-1):
+                        begin, end = interval[i-1]+ac, interval[i]-ac
+                        if method == 1:
+                            r1, c1 = left_rectangles_method(equation, ac, begin, end)
+                        elif method == 2:
+                            r1, c1 = right_rectangles_method(equation, ac, begin, end)
+                        elif method == 3:
+                            r1, c1 = middle_rectangles_method(equation, ac, begin, end)
+                        elif method == 4:
+                            r1, c1 = trapeze_method(equation, ac, begin, end)
+                        else:
+                            r1, c1 = simpson_method(equation, ac, begin, end)
+                        r += r1
+                        c += c1
+                        begin, end = interval[i] + ac, interval[i+1] - ac
+                        if method == 1:
+                            r1, c1 = left_rectangles_method(equation, ac, begin, end)
+                        elif method == 2:
+                            r1, c1 = right_rectangles_method(equation, ac, begin, end)
+                        elif method == 3:
+                            r1, c1 = middle_rectangles_method(equation, ac, begin, end)
+                        elif method == 4:
+                            r1, c1 = trapeze_method(equation, ac, begin, end)
+                        else:
+                            r1, c1 = simpson_method(equation, ac, begin, end)
+                        r += r1
+                        c += c1
+                print("Значение интеграла:", r)
+                print("Число разбиения интервала", c)
+            except ArithmeticError:
+                print("Интеграл не существует")
+        except ValueError:
+            print("Ошибка в введенном уравнении")
     while True:
         ans = input("Решить еще одно уравнение? (y/n)\n")
         if ans == 'n':

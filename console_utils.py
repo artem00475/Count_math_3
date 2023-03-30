@@ -57,26 +57,31 @@ def get_interval(eq, accur):
     return a, b
 
 
-def check_interval(eq, a, b, accur):
-    k = 0
-    index = a
-    prev = func(eq, a)
-    intervals = [a]
-    while index < b + accur:
-        if prev * func(eq, index) < 0:
-            k += 1
-            intervals.append(index)
-            prev = func(eq, index)
-        index += accur
-    intervals[-1] = b
-    if k == 0:
-        return False, 0, 0
-    elif k > 1:
-        print("На интервале", k, "корней.")
-        print("Выберите интервал:")
-        for i in range(k):
-            print(f"{i + 1}. [{round(intervals[i], 5)}, {round(intervals[i + 1], 5)}]")
-        val = enter_value(1, k)
-        return True, intervals[val - 1], intervals[val]
-    else:
-        return True, a, b
+def check_interval(eq, a, b, accuracy):
+    inter = []
+    symb = []
+    try:
+        func(eq, a)
+        inter.append(a)
+        symb.append("/")
+    except ZeroDivisionError:
+        inter.append(a+accuracy)
+        symb.append("+")
+    i = inter[0]+accuracy
+    while i < b:
+        try:
+            func(eq, i)
+        except ZeroDivisionError:
+            inter.append(i)
+            symb.append("/")
+        i += accuracy
+        i = round(i, 10)
+    try:
+        func(eq, b)
+        inter.append(b)
+        symb.append("/")
+    except ZeroDivisionError:
+        inter.append(b - accuracy)
+        symb.append("-")
+    return inter, symb
+
