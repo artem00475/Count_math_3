@@ -3,6 +3,7 @@ import sympy
 from console_utils import *
 from sympy import *
 
+
 def get_data(eq):
     accuracy = get_accuracy()
     a, b = get_interval(eq, accuracy)
@@ -50,11 +51,11 @@ def left_rectangles_method(eq, accuracy, a, b):
     y_table = []
     for x in x_table:
         y_table.append(func(eq, x))
-    result = h*sum(y_table)
+    result = h * sum(y_table)
     flag = True
     while flag:
         n *= 2
-        h = (b-a)/n
+        h = (b - a) / n
         x_table = [a]
         previous = a
         for i in range(n):
@@ -63,7 +64,7 @@ def left_rectangles_method(eq, accuracy, a, b):
         y_table = []
         for x in x_table:
             y_table.append(func(eq, x))
-        r = h*sum(y_table)
+        r = h * sum(y_table)
         if abs(r - result) < accuracy:
             flag = False
         result = r
@@ -73,8 +74,8 @@ def left_rectangles_method(eq, accuracy, a, b):
 def right_rectangles_method(eq, accuracy, a, b):
     n = 4
     h = (b - a) / n
-    x_table = [a+h]
-    previous = a+h
+    x_table = [a + h]
+    previous = a + h
     for i in range(n):
         previous += h
         x_table.append(previous)
@@ -86,8 +87,8 @@ def right_rectangles_method(eq, accuracy, a, b):
     while flag:
         n *= 2
         h = (b - a) / n
-        x_table = [a+h]
-        previous = a+h
+        x_table = [a + h]
+        previous = a + h
         for i in range(n):
             previous += h
             x_table.append(previous)
@@ -104,9 +105,9 @@ def right_rectangles_method(eq, accuracy, a, b):
 def middle_rectangles_method(eq, accuracy, a, b):
     n = 4
     h = (b - a) / n
-    x_table = [a+h/2]
-    previous = a+h/2
-    for i in range(n-1):
+    x_table = [a + h / 2]
+    previous = a + h / 2
+    for i in range(n - 1):
         previous += h
         x_table.append(previous)
     y_table = []
@@ -117,16 +118,16 @@ def middle_rectangles_method(eq, accuracy, a, b):
     while flag:
         n *= 2
         h = (b - a) / n
-        x_table = [a+h/2]
-        previous = a+h/2
-        for i in range(n-1):
+        x_table = [a + h / 2]
+        previous = a + h / 2
+        for i in range(n - 1):
             previous += h
             x_table.append(previous)
         y_table = []
         for x in x_table:
             y_table.append(func(eq, x))
         r = h * sum(y_table)
-        if abs(r - result)/3 < accuracy:
+        if abs(r - result) / 3 < accuracy:
             flag = False
         result = r
     return result, n
@@ -143,7 +144,7 @@ def trapeze_method(eq, accuracy, a, b):
     y_table = []
     for x in x_table:
         y_table.append(func(eq, x))
-    result = h/2 * (y_table[0]+y_table[-1]+2*sum(y_table[1:-1]))
+    result = h / 2 * (y_table[0] + y_table[-1] + 2 * sum(y_table[1:-1]))
     flag = True
     while flag:
         n *= 2
@@ -156,7 +157,7 @@ def trapeze_method(eq, accuracy, a, b):
         y_table = []
         for x in x_table:
             y_table.append(func(eq, x))
-        r = h/2 * (y_table[0]+y_table[-1]+2*sum(y_table[1:-1]))
+        r = h / 2 * (y_table[0] + y_table[-1] + 2 * sum(y_table[1:-1]))
         if abs(r - result) / 3 < accuracy:
             flag = False
         result = r
@@ -174,7 +175,7 @@ def simpson_method(eq, accuracy, a, b):
     y_table = []
     for x in x_table:
         y_table.append(func(eq, x))
-    result = h / 3 * (y_table[0] + y_table[-1] + 2 * sum(y_table[1:-1:2])+4*sum(y_table[2:-1:2]))
+    result = h / 3 * (y_table[0] + y_table[-1] + 2 * sum(y_table[1:-1:2]) + 4 * sum(y_table[2:-1:2]))
     flag = True
     while flag:
         n *= 2
@@ -187,7 +188,7 @@ def simpson_method(eq, accuracy, a, b):
         y_table = []
         for x in x_table:
             y_table.append(func(eq, x))
-        r = h / 3 * (y_table[0] + y_table[-1] + 4 * sum(y_table[1:-1:2])+2*sum(y_table[2:-1:2]))
+        r = h / 3 * (y_table[0] + y_table[-1] + 4 * sum(y_table[1:-1:2]) + 2 * sum(y_table[2:-1:2]))
         if abs(r - result) / 15 < accuracy:
             flag = False
         result = r
@@ -267,6 +268,7 @@ while work:
                     raise ArithmeticError
                 interval, symbols = check_interval(equation, begin, end, ac)
                 r, c = 0, 0
+                r1, c1 = 0, 0
                 # print(interval)
                 if len(interval) == 2:
                     begin, end = interval[0], interval[1]
@@ -281,35 +283,51 @@ while work:
                     else:
                         r, c = simpson_method(equation, ac, begin, end)
                 else:
-                    for i in range(1, len(interval)-1):
-                        begin, end = interval[i-1]+ac, interval[i]-ac
-                        if method == 1:
-                            r1, c1 = left_rectangles_method(equation, ac, begin, end)
-                        elif method == 2:
-                            r1, c1 = right_rectangles_method(equation, ac, begin, end)
-                        elif method == 3:
-                            r1, c1 = middle_rectangles_method(equation, ac, begin, end)
-                        elif method == 4:
-                            r1, c1 = trapeze_method(equation, ac, begin, end)
-                        else:
-                            r1, c1 = simpson_method(equation, ac, begin, end)
-                        r += r1
-                        c += c1
-                        begin, end = interval[i] + ac, interval[i+1] - ac
-                        if method == 1:
-                            r1, c1 = left_rectangles_method(equation, ac, begin, end)
-                        elif method == 2:
-                            r1, c1 = right_rectangles_method(equation, ac, begin, end)
-                        elif method == 3:
-                            r1, c1 = middle_rectangles_method(equation, ac, begin, end)
-                        elif method == 4:
-                            r1, c1 = trapeze_method(equation, ac, begin, end)
-                        else:
-                            r1, c1 = simpson_method(equation, ac, begin, end)
-                        r += r1
-                        c += c1
-                print("Значение интеграла:", r)
-                print("Число разбиения интервала", c)
+                    begin, middle, end = interval[0], interval[1], interval[2]
+                    if method == 1:
+                        r, c = left_rectangles_method(equation, ac, begin, middle-ac)
+                        r1, c1 = left_rectangles_method(equation, ac, middle+ac, end)
+                    elif method == 2:
+                        r, c = right_rectangles_method(equation, ac, begin, middle-ac)
+                        r1, c1 = right_rectangles_method(equation, ac, middle+ac, end)
+                    elif method == 3:
+                        r, c = middle_rectangles_method(equation, ac, begin, middle-ac)
+                        r1, c1 = middle_rectangles_method(equation, ac, middle+ac, end)
+                    elif method == 4:
+                        r, c = trapeze_method(equation, ac, begin, middle-ac)
+                        r1, c1 = trapeze_method(equation, ac, middle+ac, end)
+                    else:
+                        r, c = simpson_method(equation, ac, begin, middle-ac)
+                        r1, c1 = simpson_method(equation, ac, middle+ac, end)
+                    # for i in range(1, len(interval)-1):
+                    #     begin, end = interval[i-1]+ac, interval[i]-ac
+                    #     if method == 1:
+                    #         r1, c1 = left_rectangles_method(equation, ac, begin, end)
+                    #     elif method == 2:
+                    #         r1, c1 = right_rectangles_method(equation, ac, begin, end)
+                    #     elif method == 3:
+                    #         r1, c1 = middle_rectangles_method(equation, ac, begin, end)
+                    #     elif method == 4:
+                    #         r1, c1 = trapeze_method(equation, ac, begin, end)
+                    #     else:
+                    #         r1, c1 = simpson_method(equation, ac, begin, end)
+                    #     r += r1
+                    #     c += c1
+                    #     begin, end = interval[i] + ac, interval[i+1] - ac
+                    #     if method == 1:
+                    #         r1, c1 = left_rectangles_method(equation, ac, begin, end)
+                    #     elif method == 2:
+                    #         r1, c1 = right_rectangles_method(equation, ac, begin, end)
+                    #     elif method == 3:
+                    #         r1, c1 = middle_rectangles_method(equation, ac, begin, end)
+                    #     elif method == 4:
+                    #         r1, c1 = trapeze_method(equation, ac, begin, end)
+                    #     else:
+                    #         r1, c1 = simpson_method(equation, ac, begin, end)
+                    #     r += r1
+                    #     c += c1
+                print("Значение интеграла:", r+r1)
+                print("Число разбиения интервала", c+c1)
             except ArithmeticError:
                 print("Интеграл не существует")
         except ValueError:
