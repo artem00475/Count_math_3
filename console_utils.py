@@ -65,7 +65,7 @@ def check_interval(eq, a, b, accuracy):
         inter.append(a)
         symb.append("/")
     except ZeroDivisionError:
-        inter.append(a+accuracy)
+        inter.append(a+0.000001)
         symb.append("+")
     i = inter[0]+accuracy
     while i < b:
@@ -81,7 +81,7 @@ def check_interval(eq, a, b, accuracy):
         inter.append(b)
         symb.append("/")
     except ZeroDivisionError:
-        inter.append(b - accuracy)
+        inter.append(b - 0.000001)
         symb.append("-")
     return inter, symb
 

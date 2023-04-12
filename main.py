@@ -213,6 +213,9 @@ while work:
                 print(s)
             number = enter_value(1, count)
             equation = equations[number - 1]
+            # print(equation)
+            # print(antiderivative(equation))
+            antif = antiderivative(equation)
             print("ВЫберите метод:")
             print("1. Метод левых прямоугольников")
             print("2. Метод правых прямоугольников")
@@ -238,6 +241,7 @@ while work:
                 r, c = simpson_method(equation, ac, begin, end)
             print("Значение интеграла:", r)
             print("Число разбиения интервала", c)
+            print("Точное значение:", func(antif, end) - func(antif, begin))
         except ValueError:
             print("Ошибка в введенном уравнении")
     else:
@@ -262,16 +266,24 @@ while work:
             print("5. Метод Симпсона")
             method = enter_value(1, 5)
             ac, begin, end = get_data(equation)
-
+            # print(equation)
+            # print(antiderivative(equation))
+            antif = antiderivative(equation)
             try:
-                if number == 1 and begin <= 0 <= end:
-                    raise ArithmeticError
+                # if number == 1 and begin <= 0 <= end:
+                #     raise ArithmeticError
                 interval, symbols = check_interval(equation, begin, end, ac)
                 r, c = 0, 0
                 r1, c1 = 0, 0
-                # print(interval)
+                left_val, right_val = 0, 0
+                left_val1, right_val1 = 0, 0
+                #print(interval)
                 if len(interval) == 2:
+                    func(antif, begin)
+                    func(antif, end)
                     begin, end = interval[0], interval[1]
+                    left_val = func(antif, begin)
+                    right_val = func(antif, end)
                     if method == 1:
                         r, c = left_rectangles_method(equation, ac, begin, end)
                     elif method == 2:
@@ -284,6 +296,11 @@ while work:
                         r, c = simpson_method(equation, ac, begin, end)
                 else:
                     begin, middle, end = interval[0], interval[1], interval[2]
+                    func(antif, middle)
+                    left_val = func(antif, begin)
+                    right_val = func(antif, middle - ac)
+                    left_val1 = func(antif, middle + ac)
+                    right_val1 = func(antif, end)
                     if method == 1:
                         r, c = left_rectangles_method(equation, ac, begin, middle-ac)
                         r1, c1 = left_rectangles_method(equation, ac, middle+ac, end)
@@ -299,36 +316,10 @@ while work:
                     else:
                         r, c = simpson_method(equation, ac, begin, middle-ac)
                         r1, c1 = simpson_method(equation, ac, middle+ac, end)
-                    # for i in range(1, len(interval)-1):
-                    #     begin, end = interval[i-1]+ac, interval[i]-ac
-                    #     if method == 1:
-                    #         r1, c1 = left_rectangles_method(equation, ac, begin, end)
-                    #     elif method == 2:
-                    #         r1, c1 = right_rectangles_method(equation, ac, begin, end)
-                    #     elif method == 3:
-                    #         r1, c1 = middle_rectangles_method(equation, ac, begin, end)
-                    #     elif method == 4:
-                    #         r1, c1 = trapeze_method(equation, ac, begin, end)
-                    #     else:
-                    #         r1, c1 = simpson_method(equation, ac, begin, end)
-                    #     r += r1
-                    #     c += c1
-                    #     begin, end = interval[i] + ac, interval[i+1] - ac
-                    #     if method == 1:
-                    #         r1, c1 = left_rectangles_method(equation, ac, begin, end)
-                    #     elif method == 2:
-                    #         r1, c1 = right_rectangles_method(equation, ac, begin, end)
-                    #     elif method == 3:
-                    #         r1, c1 = middle_rectangles_method(equation, ac, begin, end)
-                    #     elif method == 4:
-                    #         r1, c1 = trapeze_method(equation, ac, begin, end)
-                    #     else:
-                    #         r1, c1 = simpson_method(equation, ac, begin, end)
-                    #     r += r1
-                    #     c += c1
                 print("Значение интеграла:", r+r1)
                 print("Число разбиения интервала", c+c1)
-            except ArithmeticError:
+                print("Точное значение:", right_val + right_val1 - left_val - left_val1)
+            except ZeroDivisionError:
                 print("Интеграл не существует")
         except ValueError:
             print("Ошибка в введенном уравнении")
