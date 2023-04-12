@@ -241,7 +241,10 @@ while work:
                 r, c = simpson_method(equation, ac, begin, end)
             print("Значение интеграла:", r)
             print("Число разбиения интервала", c)
-            print("Точное значение:", func(antif, end) - func(antif, begin))
+            left_val = func(antif, begin)
+            right_val = func(antif, end)
+            print("Точное значение:", right_val - left_val)
+            print("Абсолютное отклонение:", abs(right_val - left_val - r))
         except ValueError:
             print("Ошибка в введенном уравнении")
     else:
@@ -319,6 +322,7 @@ while work:
                 print("Значение интеграла:", r+r1)
                 print("Число разбиения интервала", c+c1)
                 print("Точное значение:", right_val + right_val1 - left_val - left_val1)
+                print("Абсолютное отклонение:", abs(right_val + right_val1 - left_val - left_val1 - r - r1))
             except ZeroDivisionError:
                 print("Интеграл не существует")
         except ValueError:
