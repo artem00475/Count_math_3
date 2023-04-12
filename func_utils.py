@@ -144,6 +144,10 @@ def antiderivative(eq):
             d.append(eq[i])
             container = []
         elif eq[i] in ['-', '+']:
+            if type(eq[i-2]) == float:
+                d.append(eq[i - 2])
+                d.append('x')
+                d.append('*')
             d.append(1/2)
             d.append('x')
             d.append(2)
