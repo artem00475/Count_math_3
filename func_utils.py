@@ -176,6 +176,16 @@ def antiderivative(eq):
     for i in container:
         if str(i) in ['^', '-', '+', '*']:
             d.append(i)
+        elif i == 'x':
+            d.append(1 / 2)
+            d.append('x')
+            d.append(2)
+            d.append('^')
+            d.append('*')
+        elif type(i) == float:
+            d.append(i)
+            d.append('x')
+            d.append('*')
         else:
             break
     return d
