@@ -40,7 +40,7 @@ def to_pol_format(st):
     return res
 
 
-def left_rectangles_method(eq, accuracy, a, b):
+def left_rectangles_method(eq, accuracy, a, b, value):
     n = 4
     h = (b - a) / n
     x_table = [a]
@@ -65,13 +65,13 @@ def left_rectangles_method(eq, accuracy, a, b):
         for x in x_table:
             y_table.append(func(eq, x))
         r = h * sum(y_table)
-        if abs(r - result) < accuracy:
+        if abs(r - result) < accuracy and abs(r - value) <= accuracy:
             flag = False
         result = r
     return result, n
 
 
-def right_rectangles_method(eq, accuracy, a, b):
+def right_rectangles_method(eq, accuracy, a, b, value):
     n = 4
     h = (b - a) / n
     x_table = [a + h]
@@ -96,13 +96,13 @@ def right_rectangles_method(eq, accuracy, a, b):
         for x in x_table:
             y_table.append(func(eq, x))
         r = h * sum(y_table)
-        if abs(r - result) < accuracy:
+        if abs(r - result) < accuracy and abs(r - value) <= accuracy:
             flag = False
         result = r
     return result, n
 
 
-def middle_rectangles_method(eq, accuracy, a, b):
+def middle_rectangles_method(eq, accuracy, a, b, value):
     n = 4
     h = (b - a) / n
     x_table = [a + h / 2]
@@ -127,13 +127,13 @@ def middle_rectangles_method(eq, accuracy, a, b):
         for x in x_table:
             y_table.append(func(eq, x))
         r = h * sum(y_table)
-        if abs(r - result) / 3 < accuracy:
+        if abs(r - result) / 3 < accuracy and abs(r - value) <= accuracy:
             flag = False
         result = r
     return result, n
 
 
-def trapeze_method(eq, accuracy, a, b):
+def trapeze_method(eq, accuracy, a, b, value):
     n = 4
     h = (b - a) / n
     x_table = [a]
@@ -158,13 +158,13 @@ def trapeze_method(eq, accuracy, a, b):
         for x in x_table:
             y_table.append(func(eq, x))
         r = h / 2 * (y_table[0] + y_table[-1] + 2 * sum(y_table[1:-1]))
-        if abs(r - result) / 3 < accuracy:
+        if abs(r - result) / 3 < accuracy and abs(r - value) <= accuracy:
             flag = False
         result = r
     return result, n
 
 
-def simpson_method(eq, accuracy, a, b):
+def simpson_method(eq, accuracy, a, b, value):
     n = 4
     h = (b - a) / n
     x_table = [a]
@@ -189,7 +189,7 @@ def simpson_method(eq, accuracy, a, b):
         for x in x_table:
             y_table.append(func(eq, x))
         r = h / 3 * (y_table[0] + y_table[-1] + 4 * sum(y_table[1:-1:2]) + 2 * sum(y_table[2:-1:2]))
-        if abs(r - result) / 15 < accuracy:
+        if abs(r - result) / 15 < accuracy and abs(r - value) <= accuracy:
             flag = False
         result = r
     return result, n
@@ -224,25 +224,25 @@ while work:
             print("5. Метод Симпсона")
             method = enter_value(1, 5)
             ac, begin, end = get_data(equation)
-            if method == 1:
-                print("Метод левых прямоугольников")
-                r, c = left_rectangles_method(equation, ac, begin, end)
-            elif method == 2:
-                print("Метод правых прямоугольников")
-                r, c = right_rectangles_method(equation, ac, begin, end)
-            elif method == 3:
-                print("Метод средних прямоугольников")
-                r, c = middle_rectangles_method(equation, ac, begin, end)
-            elif method == 4:
-                print("Метод трапеций")
-                r, c = trapeze_method(equation, ac, begin, end)
-            else:
-                print("Метод Симпсона")
-                r, c = simpson_method(equation, ac, begin, end)
-            print("Значение интеграла:", r)
-            print("Число разбиения интервала", c)
             left_val = func(antif, begin)
             right_val = func(antif, end)
+            if method == 1:
+                print("Метод левых прямоугольников")
+                r, c = left_rectangles_method(equation, ac, begin, end, right_val - left_val)
+            elif method == 2:
+                print("Метод правых прямоугольников")
+                r, c = right_rectangles_method(equation, ac, begin, end, right_val - left_val)
+            elif method == 3:
+                print("Метод средних прямоугольников")
+                r, c = middle_rectangles_method(equation, ac, begin, end, right_val - left_val)
+            elif method == 4:
+                print("Метод трапеций")
+                r, c = trapeze_method(equation, ac, begin, end, right_val - left_val)
+            else:
+                print("Метод Симпсона")
+                r, c = simpson_method(equation, ac, begin, end, right_val - left_val)
+            print("Значение интеграла:", r)
+            print("Число разбиения интервала", c)
             print("Точное значение:", right_val - left_val)
             print("Абсолютное отклонение:", abs(right_val - left_val - r))
         except ValueError:
@@ -286,15 +286,15 @@ while work:
                     right_val = func(antif, end)
                     begin, end = interval[0], interval[1]
                     if method == 1:
-                        r, c = left_rectangles_method(equation, ac, begin, end)
+                        r, c = left_rectangles_method(equation, ac, begin, end, right_val - left_val)
                     elif method == 2:
-                        r, c = right_rectangles_method(equation, ac, begin, end)
+                        r, c = right_rectangles_method(equation, ac, begin, end, right_val - left_val)
                     elif method == 3:
-                        r, c = middle_rectangles_method(equation, ac, begin, end)
+                        r, c = middle_rectangles_method(equation, ac, begin, end, right_val - left_val)
                     elif method == 4:
-                        r, c = trapeze_method(equation, ac, begin, end)
+                        r, c = trapeze_method(equation, ac, begin, end, right_val - left_val)
                     else:
-                        r, c = simpson_method(equation, ac, begin, end)
+                        r, c = simpson_method(equation, ac, begin, end, right_val - left_val)
                 else:
                     begin, middle, end = interval[0], interval[1], interval[2]
                     func(antif, middle)
@@ -303,20 +303,20 @@ while work:
                     left_val1 = func(antif, middle)
                     right_val1 = func(antif, end)
                     if method == 1:
-                        r, c = left_rectangles_method(equation, ac, begin, middle-ac)
-                        r1, c1 = left_rectangles_method(equation, ac, middle+ac, end)
+                        r, c = left_rectangles_method(equation, ac, begin, middle-ac, right_val - left_val)
+                        r1, c1 = left_rectangles_method(equation, ac, middle+ac, end, right_val1 - left_val1)
                     elif method == 2:
-                        r, c = right_rectangles_method(equation, ac, begin, middle-ac)
-                        r1, c1 = right_rectangles_method(equation, ac, middle+ac, end)
+                        r, c = right_rectangles_method(equation, ac, begin, middle-ac, right_val - left_val)
+                        r1, c1 = right_rectangles_method(equation, ac, middle+ac, end, right_val1 - left_val1)
                     elif method == 3:
-                        r, c = middle_rectangles_method(equation, ac, begin, middle-ac)
-                        r1, c1 = middle_rectangles_method(equation, ac, middle+ac, end)
+                        r, c = middle_rectangles_method(equation, ac, begin, middle-ac, right_val - left_val)
+                        r1, c1 = middle_rectangles_method(equation, ac, middle+ac, end, right_val1 - left_val1)
                     elif method == 4:
-                        r, c = trapeze_method(equation, ac, begin, middle-ac)
-                        r1, c1 = trapeze_method(equation, ac, middle+ac, end)
+                        r, c = trapeze_method(equation, ac, begin, middle-ac, right_val - left_val)
+                        r1, c1 = trapeze_method(equation, ac, middle+ac, end, right_val1 - left_val1)
                     else:
-                        r, c = simpson_method(equation, ac, begin, middle-ac)
-                        r1, c1 = simpson_method(equation, ac, middle+ac, end)
+                        r, c = simpson_method(equation, ac, begin, middle-ac, right_val - left_val)
+                        r1, c1 = simpson_method(equation, ac, middle+ac, end, right_val1 - left_val1)
                 print("Значение интеграла:", r+r1)
                 print("Число разбиения интервала", c+c1)
                 print("Точное значение:", right_val + right_val1 - left_val - left_val1)
