@@ -282,11 +282,9 @@ while work:
                 left_val1, right_val1 = 0, 0
                 #print(interval)
                 if len(interval) == 2:
-                    func(antif, begin)
-                    func(antif, end)
-                    begin, end = interval[0], interval[1]
                     left_val = func(antif, begin)
                     right_val = func(antif, end)
+                    begin, end = interval[0], interval[1]
                     if method == 1:
                         r, c = left_rectangles_method(equation, ac, begin, end)
                     elif method == 2:
@@ -301,8 +299,8 @@ while work:
                     begin, middle, end = interval[0], interval[1], interval[2]
                     func(antif, middle)
                     left_val = func(antif, begin)
-                    right_val = func(antif, middle - ac)
-                    left_val1 = func(antif, middle + ac)
+                    right_val = func(antif, middle)
+                    left_val1 = func(antif, middle)
                     right_val1 = func(antif, end)
                     if method == 1:
                         r, c = left_rectangles_method(equation, ac, begin, middle-ac)

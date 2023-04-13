@@ -170,15 +170,6 @@ def antiderivative(eq):
             if i < len(eq) - 2 and str(eq[i + 1]) == '*':
                 d.append('*')
                 i += 1
-        # elif str(eq[i]) == 'x' and i < len(eq) - 3 and str(eq[i + 2]) != "^" and str(eq[i + 1]) != "sin" \
-        #         and str(eq[i + 1]) != "cos":
-        #     d += container
-        #     container = []
-        #     d.append('x')
-        #     d.append(2)
-        #     d.append('^')
-        #     d.append(1/2)
-        #     d.append('*')
         else:
             container.append(eq[i])
         i += 1
