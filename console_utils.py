@@ -47,6 +47,8 @@ def get_interval(eq, accur):
     while not flagb:
         try:
             b = float(input())
+            if b == a:
+                raise ValueError
             flagb = True
         except ValueError:
             print("Повторите ввод")
@@ -54,7 +56,7 @@ def get_interval(eq, accur):
     # if exist:
     #     return a, b
     # print("На данном интервале нет корней. Повторите ввод")
-    return a, b
+    return min(a, b), max(a,b)
 
 
 def check_interval(eq, a, b, accuracy):
@@ -84,4 +86,3 @@ def check_interval(eq, a, b, accuracy):
         inter.append(b - 0.000001)
         symb.append("-")
     return inter, symb
-
